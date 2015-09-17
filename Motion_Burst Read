@@ -1,0 +1,20 @@
+The info on Motion Burst Read in datasheet is incomplete.
+After Step 3 the Motion_Burst register needs to be addressed for reading prior to burst reading (up to) 14 bytes.
+
+Example for TI's Delfino
+void burst_XY(void){
+	int ptr;
+	CS_low();
+	SpiaRegs.SPITXBUF = REG_Motion_Burst;
+	SpiaRegs.SPITXBUF = 0x50;
+	DELAY_US(tSWW);
+	SpiaRegs.SPITXBUF = REG_Motion_Burst;
+	DELAY_US(tSRAD);
+	for (ptr=0; ptr<14; ptr++){
+		SpiaRegs.SPIDAT = (0x00);
+		IDLE();
+		burstXY[ptr]=SPI_RTRN;
+	}
+	CS_high();
+}
+SPI ISR returns SPI_RTRN
